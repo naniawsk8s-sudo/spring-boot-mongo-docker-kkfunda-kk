@@ -1,48 +1,21 @@
-
-
-
 pipeline {
     agent any
 
+    tools {
+        maven 'maven-3.9.9' // This should match the Maven name in Jenkins Global Tool Configuration
+    }
+
     stages {
-        stage('Checkout from GitHub') {
+        stage('Checkout') {
             steps {
                 git branch: 'main', 
-                    url: 'https://github.com/kkdevopsb8/spring-boot-mongo-docker-kkfunda-kk.git'
+                    url: 'https://github.com/naniawsk8s-sudo/spring-boot-mongo-docker-kkfunda-kk.git'
             }
         }
 
-        stage('Setup KubeConfig') {
+        stage('Build') {
             steps {
-                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding',
-                                  credentialsId: 'aws-eks-cred']]) {
-                    sh '''
-                        aws eks update-kubeconfig --region ap-south-1 --name my-cluster
-                    '''
-                }
-            }
-        }
-
-        stage('Deploy to Kubernetes') {
-            steps {
-                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding',
-                                  credentialsId: 'aws-eks-cred']]) {
-                    sh '''
-                        kubectl apply -f springBootMongo.yml --validate=false
-                    '''
-                }
-            }
-        }
-
-        stage('Verify Pods and Services') {
-            steps {
-                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding',
-                                  credentialsId: 'aws-eks-cred']]) {
-                    sh '''
-                        kubectl get pods
-                        kubectl get svc
-                    '''
-                }
+                sh 'mvn clean package'
             }
         }
     }
