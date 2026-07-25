@@ -1,3 +1,4 @@
+
 pipeline {
     agent any
 
@@ -16,6 +17,18 @@ pipeline {
         stage('Build') {
             steps {
                 sh 'mvn clean package'
+            }
+        }
+		
+		stage('SonarQube') {
+            steps {
+                withSonarQubeEnv('sonar') {
+                    sh """
+                    mvn sonar:sonar \
+                        -Dsonar.projectKey=spring-boot-mongo \
+                        -Dsonar.projectName='Spring Boot Mongo Project' \
+                    """
+                }
             }
         }
     }
