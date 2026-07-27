@@ -66,7 +66,7 @@ pipeline {
 
                 docker run -d \
                   --name myspringcontainer \
-                  -p 8080:8080 \
+                  -p 8081:8080 \
                   --restart unless-stopped \
                   newton9/mongospring:latest
 
