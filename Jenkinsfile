@@ -1,4 +1,10 @@
-
+//working this one
+//instance type t3.large 8gb ram and 30 hrad disk
+// sonarqube run as container
+// intergad ssh sonarqube and docker hub
+//Docker: Docker, Docker Pipeline, Docker Build Step
+//SonarQube: SonarQube Scanner, Quality Gates Plugin
+//  docker token , sonarqube tocken / ssh agent and server key configer 
 pipeline {
     agent any
 
