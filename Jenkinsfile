@@ -1,15 +1,15 @@
-
 pipeline {
     agent any
 
     tools {
-        maven 'maven-3.9.10' // This should match the Maven name in Jenkins Global Tool Configuration
+        maven 'maven-3.9.10'
     }
 
     stages {
+
         stage('Checkout') {
             steps {
-                git branch: 'main', 
+                git branch: 'main',
                     url: 'https://github.com/naniawsk8s-sudo/spring-boot-mongo-docker-kkfunda-kk.git'
             }
         }
@@ -19,44 +19,19 @@ pipeline {
                 sh 'mvn clean package'
             }
         }
-		
-		//testing
-//testing
-pipeline {
-    agent any
 
-    tools {
-        maven 'maven-3.9.10' // This should match the Maven name in Jenkins Global Tool Configuration
-    }
-
-    stages {
-        stage('Checkout') {
+        stage('SonarQube Analysis') {
             steps {
-                git branch: 'main', 
-                    url: 'https://github.com/naniawsk8s-sudo/spring-boot-mongo-docker-kkfunda-kk.git'
+                withSonarQubeEnv('sonar') {
+                    sh '''
+                        mvn clean verify \
+                        org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
+                        -Dsonar.projectKey=spring-boot-mongo \
+                        -Dsonar.projectName="Spring Boot Mongo Project"
+                    '''
+                }
             }
         }
-
-        stage('Build') {
-            steps {
-                sh 'mvn clean package'
-            }
-        }
-		
-		stage('SonarQube Analysis') {
-		steps {
-			withSonarQubeEnv('sonar') {
-				sh '''
-					mvn clean verify \
-					org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
-					-Dsonar.projectKey=spring-boot-mongo \
-					-Dsonar.projectName="Spring Boot Mongo Project"
-					'''
-						}
-					}
-				}
-			}
-		}
 
     }
 }
