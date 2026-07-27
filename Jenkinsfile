@@ -1,3 +1,4 @@
+
 pipeline {
     agent any
 
@@ -52,5 +53,29 @@ pipeline {
                 }
             }
         }
+		stage('Deploy to CD Server') {
+    steps {
+        sshagent(['ssh']) {
+            sh '''
+                ssh -o StrictHostKeyChecking=no ubuntu@13.127.136.136 << EOF
+
+                docker pull newton9/mongospring:latest
+
+                docker stop myspringcontainer || true
+                docker rm myspringcontainer || true
+
+                docker run -d \
+                  --name myspringcontainer \
+                  -p 8080:8080 \
+                  --restart unless-stopped \
+                  newton9/mongospring:latest
+
+                docker ps
+
+				EOF
+					'''
+				}
+			}
+		}
     }
 }
