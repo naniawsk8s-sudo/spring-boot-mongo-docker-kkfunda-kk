@@ -54,26 +54,41 @@ pipeline {
             }
         }
 		stage('Deploy to CD Server') {
-			steps {
-				sshagent(['ssh']) {
-					sh '''
-						ssh -o StrictHostKeyChecking=no ubuntu@13.127.136.136 "
-						docker pull newton9/mongospring:latest
-						
-						docker stop myspringcontainer || true
-						docker rm myspringcontainer || true
-						
-						docker run -d \
-						--name myspringcontainer \
-						-p 8081:8080 \
-						--restart unless-stopped \
-						newton9/mongospring:latest
+    steps {
+        sshagent(['ssh']) {
+            sh '''
+                ssh -o StrictHostKeyChecking=no ubuntu@13.127.136.136 "
+                    docker pull newton9/mongospring:latest &&
 
-						docker ps
-						"
-					'''
-				}
-			}	
-		}	
+                    docker network create jionetwork || true &&
+
+                    docker stop springapp mongo || true &&
+                    docker rm springapp mongo || true &&
+
+                    docker run -d \
+                      --name mongo \
+                      --network jionetwork \
+                      -e MONGO_INITDB_ROOT_USERNAME=devdb \
+                      -e MONGO_INITDB_ROOT_PASSWORD=dev@123 \
+                      mongo:8.0.9-noble &&
+
+                    sleep 15 &&
+
+                    docker run -d \
+                      --name springapp \
+                      --network jionetwork \
+                      -p 8080:8080 \
+                      -e MONGO_DB_HOSTNAME=mongo \
+                      -e MONGO_DB_USERNAME=devdb \
+                      -e MONGO_DB_PASSWORD=dev@123 \
+                      --restart unless-stopped \
+                      newton9/mongospring:latest &&
+
+                    docker ps
+                "
+            '''
+       			 }
+    		}
+		}		
     }
 }
