@@ -77,7 +77,7 @@ pipeline {
                     docker run -d \
                       --name springapp \
                       --network jionetwork \
-                      -p 8080:8080 \
+                      -p 8090:8080 \
                       -e MONGO_DB_HOSTNAME=mongo \
                       -e MONGO_DB_USERNAME=devdb \
                       -e MONGO_DB_PASSWORD=dev@123 \
