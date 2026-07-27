@@ -57,7 +57,7 @@ pipeline {
 			steps {
 				sshagent(['ssh']) {
 					sh '''
-						ssh -o StrictHostKeyChecking=no ubuntu@13.127.136.136 <<'EOF'
+						ssh -o StrictHostKeyChecking=no ubuntu@13.127.136.136 "
 						docker pull newton9/mongospring:latest
 						
 						docker stop myspringcontainer || true
@@ -70,7 +70,7 @@ pipeline {
 						newton9/mongospring:latest
 
 						docker ps
-						EOF
+						"
 					'''
 				}
 			}	
