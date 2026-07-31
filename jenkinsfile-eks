@@ -13,7 +13,7 @@ pipeline {
         stage('Setup KubeConfig') {
             steps {
                 withCredentials([[$class: 'AmazonWebServicesCredentialsBinding',
-                                  credentialsId: 'aws-eks-cred']]) {
+                                  credentialsId: 'aws-kumari']]) {
                     sh '''
                         aws eks update-kubeconfig --region ap-south-1 --name my-cluster
                     '''
