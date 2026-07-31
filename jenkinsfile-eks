@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Checkout from GitHub') {
             steps {
-                git branch: 'feature', 
+                git branch: 'main', 
                     url: 'https://github.com/naniawsk8s-sudo/spring-boot-mongo-docker-kkfunda-kk.git'
             }
         }
