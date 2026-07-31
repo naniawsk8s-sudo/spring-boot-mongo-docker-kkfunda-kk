@@ -26,7 +26,7 @@ pipeline {
                 withCredentials([[$class: 'AmazonWebServicesCredentialsBinding',
                                   credentialsId: 'aws-kumari']]) {
                     sh '''
-                        kubectl apply -f springBootMongo.yml --validate=false
+                        kubectl dekete -f springBootMongo.yml --validate=false
                     '''
                 }
             }
