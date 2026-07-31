@@ -24,7 +24,7 @@ pipeline {
         stage('Deploy to Kubernetes') {
             steps {
                 withCredentials([[$class: 'AmazonWebServicesCredentialsBinding',
-                                  credentialsId: 'aws-eks-cred']]) {
+                                  credentialsId: 'aws-kumari']]) {
                     sh '''
                         kubectl apply -f springBootMongo.yml --validate=false
                     '''
@@ -35,7 +35,7 @@ pipeline {
         stage('Verify Pods and Services') {
             steps {
                 withCredentials([[$class: 'AmazonWebServicesCredentialsBinding',
-                                  credentialsId: 'aws-eks-cred']]) {
+                                  credentialsId: 'aws-kumari']]) {
                     sh '''
                         kubectl get pods
                         kubectl get svc
